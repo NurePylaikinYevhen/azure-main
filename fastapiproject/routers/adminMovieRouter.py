@@ -93,7 +93,7 @@ async def create_movie(
     except HTTPException as e:
         raise e
     except Exception as e:
-        raise HTTPException(status_code=500, detail=e)
+        raise HTTPException(status_code=500, detail=str(actor_ids[0]))
 
 @router.delete("/api/admin/movies/{movie_id}")#, dependencies=[Depends(is_admin)])
 async def delete_movie(movie_id: str, db = Depends(connect_to_movies_db)) -> dict:
