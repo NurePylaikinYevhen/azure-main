@@ -56,7 +56,7 @@ async def create_movie(
                 try:
                     first_name, last_name = actor_name.strip().split(' ', 1)
                 except ValueError as e:
-                    raise HTTPException(status_code=400, detail=f"Некоректне ім'я актора: {actor_name}")
+                    raise HTTPException(status_code=400, detail=f"Некоректне ім'я актора lololo: {actor_name}")
 
                 full_name = f"{first_name} {last_name}"
                 response = await client.get(f"http://fastapiproject2-service.default.svc.cluster.local:5001/api/actors/searchByFullName/{full_name}")
