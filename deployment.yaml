@@ -1,0 +1,171 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mongodb-secret
+type: Opaque
+data:
+  MONGO_URL: bW9uZ29kYjovL2F6ZmFzdGFwaXNlcnZlcjphc2RmYXN0YXBpc2VyOmphV3F1emdwOU1SQ2xISGdDRzU4d0FPc3VsbjhhenpzdTd0cGJ2YzQ4bDZHakozRDRZS2RuUUdkY1NENkVDa0NPQ2tqRktrZGtka0dnV0FDREJUVVRKSGc9PUBhemZhc3RhcGlzZXJ2ZXJAZXhhbXBsZS5jb20uY29zbW9zLmF6dXJlLmNvbToxMDI1NS8/c3NsPXRydWUmcmVwbGljYVNldD1nbG9iYWxkYiZyZXRyeXJpdGVzPWZhbHNlJm1heElkbGVUaW1lTVM9MTIwMDAwJmFwcE5hbWU9QGF6ZmFzdGFwaXNlcnZlcg==
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapiproject-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fastapiproject
+  template:
+    metadata:
+      labels:
+        app: fastapiproject
+    spec:
+      imagePullSecrets:
+      - name: acr-secret
+      containers:
+      - name: fastapiproject
+        image: azfastapiregistry.azurecr.io/azure-main-fastapiproject
+        ports:
+        - containerPort: 5000
+        env:
+        - name: MONGO_URL
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: MONGO_URL
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapiproject2-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fastapiproject2
+  template:
+    metadata:
+      labels:
+        app: fastapiproject2
+    spec:
+      imagePullSecrets:
+      - name: acr-secret
+      containers:
+      - name: fastapiproject2
+        image: azfastapiregistry.azurecr.io/azure-main-fastapiproject2
+        ports:
+        - containerPort: 5001
+        env:
+        - name: MONGO_URL
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: MONGO_URL
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prj-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prj
+  template:
+    metadata:
+      labels:
+        app: prj
+    spec:
+      imagePullSecrets:
+      - name: acr-secret
+      containers:
+      - name: prj
+        image: azfastapiregistry.azurecr.io/azure-main-prj
+        ports:
+        - containerPort: 5003
+        env:
+        - name: MONGO_URL
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: MONGO_URL
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastapiproject-service
+spec:
+  selector:
+    app: fastapiproject
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5000
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastapiproject2-service
+spec:
+  selector:
+    app: fastapiproject2
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5001
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prj-service
+spec:
+  selector:
+    app: prj
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5003
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway
+  template:
+    metadata:
+      labels:
+        app: gateway
+    spec:
+      imagePullSecrets:
+      - name: acr-secret
+      containers:
+      - name: gateway
+        image: azfastapiregistry.azurecr.io/azure-main-gateway:latest
+        ports:
+        - containerPort: 5050
+        env:
+        - name: MONGO_URL
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: MONGO_URL
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway-service
+spec:
+  selector:
+    app: gateway
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5050
+  type: LoadBalancer

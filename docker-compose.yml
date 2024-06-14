@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  fastapiproject:
+    build:
+      context: ./fastapiproject
+      dockerfile: ./Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      MONGO_URL: "mongodb://azfastapiserver:jaWquzgp9MRClHHgCG58wAOs5vlz8azjsu7tpbvc48l6Gj3D4YKdnQGdcSD6ECkCOCkjFkkkdGgWACDbTUTJHg==@azfastapiserver.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@azfastapiserver@"
+
+  fastapiproject2:
+    build:
+      context: ./fastapiproject2
+      dockerfile: ./Dockerfile
+    ports:
+      - "5001:5001"
+    environment:
+      MONGO_URL: "mongodb://azfastapiserver:jaWquzgp9MRClHHgCG58wAOs5vlz8azjsu7tpbvc48l6Gj3D4YKdnQGdcSD6ECkCOCkjFkkkdGgWACDbTUTJHg==@azfastapiserver.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@azfastapiserver@"
+
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: ./Dockerfile
+    ports:
+      - "5050:5050"
+
+  prj:
+    build:
+      context: ./prj
+      dockerfile: ./Dockerfile
+    ports:
+      - "5003:5003"
+    environment:
+      MONGO_URL: "mongodb://azfastapiserver:jaWquzgp9MRClHHgCG58wAOs5vlz8azjsu7tpbvc48l6Gj3D4YKdnQGdcSD6ECkCOCkjFkkkdGgWACDbTUTJHg==@azfastapiserver.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@azfastapiserver@"
