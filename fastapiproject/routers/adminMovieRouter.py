@@ -65,7 +65,7 @@ async def create_movie(
                     try:
                         actors = response.json()
                     except (ValueError, JSONDecodeError) as e:
-                        raise HTTPException(status_code=500, detail="Помилка сервісу акторів")
+                        raise HTTPException(status_code=500, detail="Помилкааа сервісу акторів")
 
                     logging.debug(f"Actors found: {actors}")
                     if actors:
