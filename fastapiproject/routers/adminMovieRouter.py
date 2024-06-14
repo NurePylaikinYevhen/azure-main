@@ -59,7 +59,7 @@ async def create_movie(
                     raise HTTPException(status_code=400, detail=f"Некоректне ім'я актора: {actor_name}")
 
                 full_name = f"{first_name} {last_name}"
-                response = await client.get(f"http://fastapiproject2:5001/api/actors/searchByFullName/{full_name}")
+                response = await client.get(f"http://fastapiproject2-service.default.svc.cluster.local:5001/api/actors/searchByFullName/{full_name}")
 
                 if response.status_code == 200:
                     try:
